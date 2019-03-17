@@ -115,7 +115,7 @@ if [[ $? -eq 1 ]]; then
   npm install -g npm
   npm update -g
 
-  npm install -g prettier typescript yarn
+  npm install -g prettier typescript yarn @vue/cli
 
 fi
 
