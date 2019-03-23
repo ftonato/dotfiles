@@ -7,9 +7,8 @@ function ask_install() {
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     return 1
-  else
-    return 0
   fi
+  return 0
 
 }
 
@@ -40,16 +39,9 @@ aptitude remove \
 # install apps
 aptitude install \
   `# read-write NTFS driver for Linux` \
-  #ntfs-3g \
   safe-rm \
   `# default for many other things` \
   build-essential \
-  #make \
-  `# unzip, unrar etc.` \
-  #zip \
-  #unzip
-  `# interactive I/O viewer` \
-  #tree \
   `# command line clipboard` \
   xclip \
   `# get files from web` \
@@ -68,15 +60,7 @@ aptitude install \
   `# codecs audio/video tools` \
   ubuntu-restricted-extras \
   libavcodec-extra libav-tools \
-  vlc \
-  `# optimize battery management` \
-  tlp \
-  tlp-rdw
-
-#
-# TLP will start automatically
-#
-tlp start
+  vlc
 
 #
 # fixing nodejs for ubuntu
@@ -84,19 +68,38 @@ tlp start
 ln -s /usr/bin/nodejs /usr/bin/node
 
 #
-# for communication and survive
+# for survive
 #
-ask_install "install extras (skype, slack, spotify)?"
+ask_install "install extras (Spotify, f.lux, tlp)?"
 if [[ $? -eq 1 ]]; then
-  snap install \
-    `# communication tools` \
-    slack --classic \
-    skype --classic \
-    `# survive tools` \
-    spotify \
-    fluxgui \
-    `# IDE ` \
-    vscode --classic
+
+  # Add (Spotify - survive tools) repository
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
+  echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+
+  # Add (tlp - optimize battery management) repository
+  add-apt-repository ppa:linrunner/tlp
+
+  # Add (f.lux - better lighting management) repository
+  add-apt-repository ppa:nathan-renniewaldock/flux
+
+  # Update completed list of available packages
+  apt-get update
+
+  # Install new available packages
+  apt-get install \
+      `# Spotify` \
+      spotify-client \
+      `# optimize battery management` \
+      tlp tlp-rdw \
+      `# better lighting management` \
+      fluxgui
+
+  #
+  # TLP will start automatically
+  #
+  tlp start
+
 fi
 
 
@@ -115,7 +118,7 @@ if [[ $? -eq 1 ]]; then
   npm install -g npm
   npm update -g
 
-  npm install -g prettier typescript yarn @vue/cli
+  npm install -g prettier typescript yarn
 
 fi
 
@@ -124,3 +127,18 @@ aptitude -v clean
 
 # copy default gitconfig / bash_profile
 sh ./bootstrap.sh
+
+# show optional softwares to install
+echo
+echo "install these softwares for your happiness
+
+# communication tools
+
+> slack
+> skype
+
+# webworker tools (optionals)
+
+> vscode
+> google chrome"
+echo
