@@ -21,7 +21,7 @@ fi
 
 # use aptitude in the next steps ...
 if [ \! -f $(whereis aptitude | cut -f 2 -d ' ') ] ; then
-  apt-get install aptitude snapd
+  apt-get install aptitude
 fi
 
 # update && upgrade
@@ -74,8 +74,9 @@ ask_install "install extras (Spotify, f.lux, tlp)?"
 if [[ $? -eq 1 ]]; then
 
   # Add (Spotify - survive tools) repository
-  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 931FF8E79F0876134EDDBDCCA87FF9DF48BF1C90
-  echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+  curl -sS https://download.spotify.com/debian/pubkey.gpg | sudo apt-key add - 
+  echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+
 
   # Add (tlp - optimize battery management) repository
   add-apt-repository ppa:linrunner/tlp
@@ -112,13 +113,8 @@ if [[ $? -eq 1 ]]; then
 
   echo "update/install npm-packages ..."
 
-  #npm config set strict-ssl false
-  #npm config set registry http://registry.npmjs.org
-
   npm install -g npm
   npm update -g
-
-  npm install -g prettier typescript yarn
 
 fi
 
@@ -134,11 +130,26 @@ echo "install these softwares for your happiness
 
 # communication tools
 
-> slack
-> skype
+> Station (getstation.com)
+  - Skype
+  - Slack
+  - WhatsApp
+  - Telegram
+
+# security
+
+> Bitwarden
+
+# write
+
+> GitBook
+
+# Productivity
+
+> Ulauncher
 
 # webworker tools (optionals)
 
-> vscode
-> google chrome"
+> VSCode
+> Brave Browser"
 echo
